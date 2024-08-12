@@ -1,0 +1,1000 @@
+---
+title: "Introduction to R"
+date: last-modified
+author: Neil Lund
+format:
+  revealjs:
+    slide-number: true
+    logo: images/apan3.png
+    footer-logo-link: "https://academiccatalog.umd.edu/graduate/programs/applied-political-analytics-apan/" 
+    footer: <a href=https://academiccatalog.umd.edu/graduate/programs/applied-political-analytics-apan/>Applied Political Analytics</a>
+    header: 
+    header-logo: images/informal-seal.webp
+filters:
+  - reveal-header
+code-annotations: select
+slide-level: 3
+embed-resources: true
+---
+
+<!-- Fullscreen plugin -->
+
+```{=html}
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/fullscreen/plugin.js"></script>
+```
+```{=html}
+<script>
+Reveal.initialize({
+  // ...
+  plugins: [ RevealFullscreen ],
+  // ...
+});
+</script>
+```
+```{r, include=FALSE}
+
+knitr::opts_chunk$set(echo=T)
+
+```
+
+# What is R? {background="#43464B"}
+
+## Background
+
+::: columns
+::: {.column width="50%"}
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/1200px-R_logo.svg.png)
+:::
+
+::: {.column width="50%"}
+-   Free and open source successor to S
+-   "High Level" language
+-   Made for statisticians who need to program (not programmers who need some statistics)
+:::
+:::
+
+::: notes
+Every introduction to R will talk about how it was the successor to the S language (which is a weird first thing to know about it but it is in the first paragraph of pretty much any introduction to R you'll come across)
+
+S was invented at Bell labs in 1970s as a computing environment for statisticians who wanted to do data analysis without the arduous process of learning computer science. This might seem esoteric, but its actually a useful bit of context: some of R's more inscrutable behaviors can be traced back to its origins as a stats-first language. It also goes a long way toward explaining why you'll spend so much time with it in this program: you can dive head first into basic analyses *really* quickly.
+:::
+
+# What is R-Studio? {background="#43464B"}
+
+## Background
+
+::: notes
+:::
+
+# Installing R
+
+## Installing R
+
+If you don't already have it, go to <https://cran.r-project.org/> and install an appropriate version of R
+
+## R without R-Studio
+
+::: columns
+::: {.column width="50%"}
+![R in the windows command prompt](images/R_commandline.png)
+:::
+
+::: {.column width="50%"}
+![The R Graphical Interface](images/R_gui_screenshot.png)
+:::
+:::
+
+::: notes
+Once you have it installed, you can use R directly from the command line, or by opening the R Graphical User Interface that comes packaged with a normal R installation.
+
+(Show a print() function here)
+
+However, we generally won't be interacting with R this way. Instead, we'll generally use R-Studio, which is an integrated development environment for the R language (that increasingly offers support for some other languages on the side)
+:::
+
+# Installing R-Studio
+
+## Installing R-Studio
+
+You can install R-Studio from here: <https://posit.co/download/rstudio-desktop/>
+
+# Using the R-Studio Interface
+
+## The R-Studio Layout
+
+::: columns
+::: {.column width="50%"}
+![R-studio interface](https://docs.posit.co/ide/user/ide/guide/ui/images/rstudio-panes-labeled.jpeg)
+:::
+
+::: {.column .incremental width="50%"}
+-   Write commands in the **source** window (and save them when you're done)
+
+-   View output and results in the **console**
+
+-   See what you've loaded or stored in the **environment** window
+
+-   View and export plots from the **output** window (and manage packages from the packages tab)
+:::
+:::
+
+## Running code interactively
+
+Type the following in the **source** window:
+
+```{r, eval=FALSE}
+# making a histogram from random data 
+x <- rnorm(100)
+x  
+hist(x)  
+
+```
+
+Click your cursor on the top line and press CTRL + ENTER (CMD + Enter on a Mac). Your cursor should move down and the code will be evaluated. Take note of what happens and where things show up after executing each line.
+
+### Line 1
+
+Text after a `#` symbol is ignored by R, so this first line is just a comment. Use comments to remind yourself and others of what your code is doing.
+
+```{r, eval=FALSE, `code-line-numbers`=1}
+
+# making a histogram from random data 
+
+```
+
+### Line 2
+
+```{r, eval=TRUE, `code-line-numbers`=2}
+# making a histogram from random data 
+x <- rnorm(100) 
+
+
+```
+
+The `<-` operator will assign a name to some data, and `rnorm` is a function that generates random data with a normal (bell-curve) distribution.
+
+Here, I've created 100 random numbers and assigned them to a variable named `x`
+
+### Line 3
+
+If I just reference the variable `x`, R will print its contents into the console.
+
+```{r, eval=TRUE, `code-line-numbers`=3}
+# making a histogram from random data 
+x <- rnorm(100) 
+x  
+
+```
+
+### Line 4
+
+Finally, the `hist()` function takes some data and plots a histogram. I'm telling R "create a histogram from the contents of variable x"
+
+```{r, eval=TRUE, `code-line-numbers`=4}
+# making a histogram from random data 
+x <- rnorm(100) 
+x  
+hist(x) 
+
+```
+
+## Running an entire script
+
+Now, with the same script open, press CTRL + SHIFT + S
+
+```{r, eval=FALSE}
+# making a histogram from random data
+x <- rnorm(100) 
+x  
+hist(x) 
+
+
+```
+
+. . .
+
+What happened?
+
+## Restarting R-Studio
+
+Do the following:
+
+-   Close R-studio
+
+-   When asked if you would like to save the Workspace Image, click "No" (and ideally never click "Yes" ever from now until the end of time)
+
+-   Re-open R studio
+
+-   Try to run just the last line of the code again:
+
+```{r, eval=FALSE}
+
+hist(x)
+
+```
+
+. . .
+
+What happened?
+
+## Embracing impermanence
+
+The data in R's global environment goes away when you restart R.
+
+. . .
+
+You can't evaluate or run functions on `x` until you create x. The order of commands matters.
+
+. . .
+
+But scripts are smaller, easier to share, easier to replicate, and easier to re-use than data itself. So try to store scripts rather than making new copies of data (when feasible)
+
+## Installing Packages
+
+R packages extend the basic functionality of R so you can do more stuff more easily.
+
+To use a package, you first need to: . . . - Install it (just once!) using the install.packages("packagename")\` function or the R-Studio interface. . . . - Then you need to load it using the \`library(packagename)\` command each time you open R.
+
+### Installing the Snake package
+
+Install the tidyverse package by running (note the quotation marks):
+
+```{r, eval=FALSE}
+install.packages("Snake")
+
+```
+
+. . .
+
+Or use the graphical interface
+
+### Loading the Snake package
+
+**Load** the Snake package by running (note the lack of quotation marks)
+
+```{r, eval=FALSE}
+library(Snake)
+
+
+```
+
+### Using the Snake Package
+
+Now you can use commands from the Snake package. Try running this:
+
+```{r,eval=FALSE}
+
+playSnake()
+
+```
+
+. . .
+
+Admittedly this is not a typical use-case for this tool...
+
+## Importing Data
+
+You can use the Import Dataset menu to import data into R with point-and-click commands OR by writing code.
+
+We'll walk through both approaches using this data set as an example:
+
+<https://raw.githubusercontent.com/fivethirtyeight/data/master/bob-ross/elements-by-episode.csv>
+
+Which contains data from the article "[**A Statistical Analysis of the Work of Bob Ross**](https://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/)**"** by Walt Hickey.
+
+. . .
+
+![Do people still know who Bob Ross is?](https://fivethirtyeight.com/wp-content/uploads/2014/04/bob-ross.jpg?w=575){width="250"}
+
+### Importing data: point and click
+
+(Walk through this in class, but just a reminder that you can access this by click the "import dataset" button in the top right pane, and then selecting "From text (readr)" from the menu and pasting the data URL into the bar at the top.
+
+### Importing data: using a script
+
+After loading the data with point and click commands, we should copy the code that produced it and save it in our script, that way, we can easily replicate or share our analysis by just re-running the script.
+
+```{r}
+# load the readr package
+library(readr) #<1>
+
+# use the read_csv function to read the data
+elements_by_episode <- read_csv( #<2>
+  "https://raw.githubusercontent.com/fivethirtyeight/data/master/bob-ross/elements-by-episode.csv"
+  )
+
+# optionally, use View() to examine the data in the GUI
+#View(elements_by_episode) #<3>
+
+
+```
+
+1.  Libraries (aka packages) are basically collections of functions and classes that extend what R can do. Some libraries are loaded by default when you load R, but most will have to be loaded using the `library` function. The `readr` package is what allows us to use the `read_csv` function, which is not a built-in command.
+2.  Here the data is coming from a URL, but it could just as easily come from a file on your computer. Note that I've spread this over multiple lines. In general R doesn't care about whether I write code on one line or several (however, it *does* care if I add a line break inside quotation marks!)
+3.  The `View()` function is handy, but it can be kind of annoying because it makes a pop-up, so I placed a `#` in front of this command to turn it into a comment.
+
+### Viewing Data
+
+-   Click the data set name in the environment window to view it
+
+-   What is the unit of analysis?
+
+-   How many observations are there (rows)? How many variables (columns)? How are things represented?
+
+-   In the source window, start typing in the name of the data set (`elements_by_episode`) what happens?
+
+## R-Studio: Recap and tips
+
+::: incremental
+1.  RStudio is a graphical interface for the R programming language. **You don't need it to use R**, but it simplifies a lot of analysis and can make your work faster with things like code completion.
+2.  In general, you should use the "source" window to interact with R, and then save your commands in a script file when you're done.
+3.  Use hotkeys like CTRL + ENTER to run single lines of code. Or CTRL + SHIFT + S to run an entire script
+4.  Many point-and-click commands in Rstudio will produce R code. You should save this in a script so you can easily replicate your results.
+:::
+
+# R data {background="#43464B"}
+
+## Variables and the assignment operator
+
+We've already used the `<-` operator to store a value and reference it by name. We call this process `assignment`.
+
+```{r}
+
+x <- 1
+```
+
+Assignment is very flexible. You can change the value of an existing variable, you can make a copy with a new name, and you can even combine multiple variables into one or add them together.
+
+```{r, eval=FALSE}
+# create a copy of x called y
+y <- x 
+# assign a new value to x 
+x <- 2
+#  add them together
+x + y
+# add them plus some other number and then assign the results to z
+z <- x + y + 34
+
+
+```
+
+## Variable naming
+
+Variable names must start with either a letter or a period. They **usually** can't contain spaces or certain special operators like `+` or `-`, but you can use these characters if you wrap the name in `` ` `` symbols:
+
+A good practice is to give descriptive names to variables and use underscores (`_`) in place of spaces.
+
+```{r, eval=FALSE}
+
+# this gives an error about an unexpected symbol: 
+my variable <- "Some values"
+
+# but this is okay: 
+my_variable <- "Some values"
+
+# in a pinch, you can also do this (but why would you?)
+`my variable` <- "Some values"
+
+```
+
+## Data types
+
+In addition to storing data, R variables can have additional attributes and classes that impact how they're stored, modified, or used in functions.
+
+One of the most fundamental attributes is a variable's `mode`, which is how R knows how to do things like distinguish numbers from text.
+
+```{r, eval=FALSE}
+x <- 1
+mode(x)
+
+```
+
+### Data types (cont'd)
+
+We've already seen `numeric` data. But two other very common ones are:
+
+. . .
+
+**character** which is used for storing text and can be created by entering values inside quotation marks.
+
+```{r, eval=FALSE}
+mode("abc")
+```
+
+. . .
+
+And **logical** which can take values of either `TRUE` or `FALSE` and can be created directly with those value OR by writing out a logical comparison like `3 > 4`
+
+```{r, eval=FALSE}
+mode(TRUE)
+
+mode(3 > 5)
+
+```
+
+### Why typing matters
+
+What happens when you run this? And why?
+
+```{r, eval=FALSE}
+"1" + "2"
+
+```
+
+. . .
+
+Why is one of these problematic and the other isn't?
+
+```{r, eval=FALSE}
+
+x <- "ABC"
+
+x <- ABC
+
+```
+
+. . .
+
+Whats up with this?
+
+```{r}
+
+"10" == 10 
+
+```
+
+## Data structures
+
+Data structures allow us to store and perform calculations on groups of numbers or text. The ones we'll see most often are `vector`, `matrix`, `data frame` and `list`. We'll talk briefly about each.
+
+## Vectors
+
+**vectors** store multiple elements of the same type. You can create a vector by passing a comma-separated list to the `c()` function.
+
+```{r}
+x <- c(1, 2, 3)
+
+y <- c(TRUE, TRUE, FALSE)
+
+z <- c("A", "B", "C")
+
+```
+
+### Vector coercion
+
+The elements of a vector must share a type. If they don't, then R will "coerce" each element to make them conform.
+
+```{r}
+c("A", 3, 1, "B")
+
+
+```
+
+. . .
+
+What happens when you try to create a vector with logical elements and numbers? Why?
+
+```{r, eval=FALSE}
+c(TRUE, FALSE, 31, 1)
+
+```
+
+### Vector indexing
+
+We can use the `[]` operator to access specific elements of a vector. For instance, I can get the 2nd element of this vector by writing:
+
+```{r}
+x<- c(1, 2, 3)
+
+x[2]
+
+
+```
+
+### Vector indexing (cont'd)
+
+We can also use vectors to subset other vectors
+
+```{r}
+x[c(1, 2)]
+
+
+```
+
+### Vector indexing (cont'd)
+
+And we can use a logical comparison to subset.
+
+This comparison creates a logical vector:
+
+```{r}
+# this produces a logical vector
+x>1
+```
+
+And this uses a logical vector to subset another vector:
+
+```{r}
+x[x>1]
+
+```
+
+## Matrices
+
+A matrix has a single type of data arranged in a fixed number of rows and columns. Here's a matrix with 3 columns and 5 rows.
+
+```{r}
+
+mydata = 1:15
+my_matrix =matrix(data = mydata, nrow=5, ncol=3)
+my_matrix
+
+```
+
+### Matrices as fancy vectors
+
+"Under the hood" a matrix is really just a vector with some extra attributes, so I can subset it just like I would a vector:
+
+```{r}
+
+my_matrix[1:4]
+
+```
+
+However, certain functions only make sense for matrices:
+
+```{r}
+
+colSums(my_matrix)
+rowSums(my_matrix)
+
+```
+
+### Matrix indexing by row and column
+
+It usually makes more sense to take an entire row or column from a matrix. To do that, I can use syntax like this:
+
+```{r}
+
+my_matrix[2, ] # extract the second row of the matrix
+
+```
+
+. . .
+
+```{r}
+
+my_matrix[, 1] # extract the 1st column
+
+```
+
+. . .
+
+```{r}
+
+my_matrix[1:3, 3] # the first through third row of the third column
+
+```
+
+## Data frames
+
+Data frames have rows and columns like a matrix, but:
+
+1.  Columns can contain different types of data
+2.  All columns have names
+3.  Columns are usually accessed using the `data$colname` notation. You can still use matrix-style indexing, though!
+
+```{r, echo=T}
+
+mydf = data.frame("text" = c("car", "dog", "house"),
+                  "numbers" = c(1, 3, 5),
+                  "booleans" = c(TRUE, TRUE, FALSE)
+                  
+                  )
+
+mydf
+
+```
+
+### Data frame indexing
+
+Use the `$` operator to access entire columns (but not rows!)
+
+```{r}
+mydf$numbers
+
+
+```
+
+. . .
+
+Or you can use double brackets followed by a column name in quotation marks
+
+```{r}
+
+mydf[["numbers"]]
+```
+
+. . .
+
+(or use matrix notation)
+
+```{r}
+mydf[,2]
+
+```
+
+### Data frames (notes)
+
+You're likely to encounter data frames more than any other type of data. However, many statistical operations will coerce your data to a vector or matrix before actually conducting the analysis.
+
+## Lists
+
+Lists are like data frames without any of the restrictions. They can contain any number of types and can even contain other lists or data frames:
+
+```{r, echo=T}
+
+mylist = list("letters" = c("A", "B", "C"),
+              "scalar" = 10,
+              "nested_list" = list("palette_1" = list("red", "blue", "green", "white"),"palette_2" = list("pink","brown", "black"))
+              )
+
+mylist
+
+```
+
+### List indexing
+
+You can also access parts of a list using the `$` or `[[]]` operators.
+
+```{r}
+
+mylist[["letters"]]
+
+mylist$letters
+
+
+```
+
+And you can also access parts of a nested list:
+
+```{r}
+
+mylist[['nested_list']][['palette_1']]
+
+```
+
+### Lists notes
+
+You generally won't use lists for your analysis because you can't really summarize their contents easily. But you'll still see them used:
+
+-   As the objects returned by R functions (such as the `lm()` command) that need to return a bunch of information.
+
+-   For storing or transporting complex data (such as information used by web services) that can't fit neatly into a data frame.
+
+## Subsetting exercise
+
+Using the Bob Ross data frame from earlier:
+
+1.  how would you find all episodes where Ross painted trees? How many are there?
+
+2.  How would you find all of the elements he painted in episode 1?
+
+3.  The "GUEST" column contains a 1 if an episode had a guest host and 0 otherwise. How would you remove all of these so you only had Bob Ross paintings?
+
+# R Functions {background="#43464B"}
+
+## What is a function?
+
+Functions are basically just blocks of generalized code that can be used over and over again. We've already used several:
+
+-   `c()` concatenates values into a vector
+-   `matrix()` turns a vector into a matrix
+-   `data frame` turns a series of equal-length vectors into a data frame
+-   `mode()` tells you the type of a particular kind of data
+
+. . .
+
+We've also used operators like `+` and `-`. In actuality, these are also a kind of R function.
+
+## Infix functions: R is a calculator
+
+### Infix Functions
+
+"Infix" functions are so obvious you probably don't even think of them as functions. Try typing this into the script editor and then send it to R:
+
+```{r, eval=FALSE, echo=TRUE}
+
+108 + 12
+```
+
+. . .
+
+### Infix Functions
+
+Infix operators will always take a left hand side (LHS) argument and a right hand side argument (RHS)
+
+`LSH + RHS`
+
+. . .
+
+Infix functions (and most R functions) can also take sets of numbers and will handle them pretty intuitively:
+
+```{r}
+
+c(1, 3, 5) + 20
+```
+
+### Infix Functions
+
+Arithmetic
+
++-------------+--------------------------------------------------------------+-------------+
+| Operator    | Usage                                                        | Example     |
++=============+==============================================================+=============+
+| +, -, /, \* | plus, minus, divide, and multiply, respectively              | `1 + 12 /3` |
++-------------+--------------------------------------------------------------+-------------+
+| %%, %/%     | Modulo division and integer division                         | `13%%4`     |
+|             |                                                              |             |
+|             |                                                              | `13%/%4`    |
++-------------+--------------------------------------------------------------+-------------+
+| \^          | Raise the left hand side to the power of the right hand side | `3 ^ 4`     |
++-------------+--------------------------------------------------------------+-------------+
+
+### Logical/Comparisons
+
++------------------+-----------------------------------+-----------------------+
+| ==               | test for equality                 | `3 == 4`              |
+|                  |                                   |                       |
+|                  |                                   | `"Horse" == "Donkey"` |
++------------------+-----------------------------------+-----------------------+
+| !=               | test for inequality               | `"Horse" != "Donkey"` |
++------------------+-----------------------------------+-----------------------+
+| \>, \<, \>=, \<= | greater than, less than, geq, leq | `45 >= 45`            |
+|                  |                                   |                       |
+|                  |                                   | `45 > 45`             |
++------------------+-----------------------------------+-----------------------+
+
+### Control/Specialized
+
++--------------------+--------------------------------------------------------------------------------------------------+---------------------------------------+
+| \<-, =             | assign RHS to LHS                                                                                | `x <- 13`                             |
+|                    |                                                                                                  |                                       |
+|                    | ( \<- is preferred over the equals sign because its less likely to be confused for a comparison) |                                       |
++--------------------+--------------------------------------------------------------------------------------------------+---------------------------------------+
+| :                  | make a sequence of numbers from LHS to RHS                                                       | `1:10`                                |
++--------------------+--------------------------------------------------------------------------------------------------+---------------------------------------+
+| \[\], \[\[\]\], \$ | Subsetting (get an entire row or a column or single observation)                                 | `x[1] , cars[4, ], iris$Sepal.Length` |
++--------------------+--------------------------------------------------------------------------------------------------+---------------------------------------+
+| \~                 | Used in model formulas (like when we want to estimate the effect of a variable on an outcome)    | `lm(speed~dist, data=cars)`           |
++--------------------+--------------------------------------------------------------------------------------------------+---------------------------------------+
+
+## Prefix functions: R is a [**fancy**]{.underline} calculator
+
+### Prefix syntax
+
+Most R functions will use prefix notation. Use a prefix function by first writing the name of the function, followed by parentheses with some arguments inside.
+
+. . .
+
+For instance, here's how I can get the sum of a set of numbers:
+
+```{r}
+sum(1, 2, 3)
+```
+
+### The help() function
+
+The help function is a special function that brings up information about functions. Run this and see what shows up in the bottom right window of R-Studio.
+
+```{r, eval=FALSE}
+help(sum)
+
+
+```
+
+. . .
+
+You can also get help on an infix operator, but you need to wrap it in these: \` so R doesn't get confused:
+
+```{r, eval=FALSE}
+
+help(`+`)
+```
+
+### The mean() function
+
+Lets take a closer look at the Default S3 method here for the mean() function
+
+```{r, echo=T, eval=FALSE}
+
+mean(x, ...)
+## Default S3 method:
+mean(x, trim = 0, na.rm = FALSE, ...)
+
+```
+
+-   `x` is the main input.
+
+-   two remaining arguments (`trim` and `na.rm`) have a name AND default values. This means we don't have to write out these arguments every time.
+
+### Default function arguments
+
+::: columns
+Try running this:
+
+::: {.column width="50%"}
+```{r,echo=F}
+
+
+
+vector_a <- c(1, 2, 4, NA, 3, 7)
+
+mean(x = vector_a)
+
+
+```
+:::
+:::
+
+. . .
+
+Now try this:
+
+::: columns
+::: {.column width="50%"}
+```{r, echo=F}
+vector_a <- c(1, 2, 4, NA, 3, 7)
+
+mean(x = vector_a, na.rm=TRUE)
+
+```
+:::
+:::
+
+. . .
+
+::: columns
+::: {.column width="50%"}
+:::
+
+::: {.column width="50%"}
+::: callout-note
+R is pedantic about math! There really isn't a valid way to calculate the mean with `NA` values, and `NA` is supposed to be a placeholder, so R doesn't want to ignore it by default. So you're forced to be explicit.
+:::
+:::
+:::
+
+### Named arguments
+
+One more thing to note here is that we can name each argument explicitly, but we don't have to:
+
+```{r}
+
+vector_b <- c(1, 3, 4, 9)
+
+mean(x = vector_b)
+
+
+```
+
+Now try without specifying the name `x`:
+
+```{r}
+
+mean(vector_b)
+
+```
+
+### Unnamed Arguments
+
+If we don't name the arguments, R will assume they're being given in the order specified in the help file. This can cause problems if we get things out of sequence. Which is why this is okay:
+
+```{r}
+
+mean(vector_a, na.rm=T)
+
+
+```
+
+. . .
+
+... but this gives an error message:
+
+```{r, error=TRUE}
+
+mean(vector_a, T)
+
+```
+
+### User created functions
+
+You can create your own functions. To create a function, you'll use the following general syntax:
+
+```{r}
+
+myFunction <- function(arguments){
+  # .... do some stuff  here 
+  # ....
+  result <- "some calculations"
+  return(result)
+}
+
+
+
+```
+
+Now execute your function just like you would any other R function.
+
+```{r}
+
+myFunction(arguments = "some arguments")
+
+```
+
+Note: built in functions like `sum()` will be available as soon as you load R, but user-created functions will just be loaded into the global environment, so they go away when you close R.
+
+## R functions: recap
+
+1.  Infix functions like +, -, / will take a left hand side argument and a right hand side argument
+2.  Prefix functions can be used by writing the function name followed by some arguments in parentheses. This type of function syntax is more common, especially for more complex operations.
+3.  Use `help()` to get information about an R function.
+4.  Pay attention to required arguments, argument names, and defaults.
+5.  You can create your own functions. If you find yourself copy-pasting a chunk of code over and over, consider creating a function instead.
+
+# Analysis exercise
+
+Find the top 10 most common elements Bob Ross painted and create a barplot showing the frequency of each.
+
+Start by writing out the steps you need to perform as comments:
+
+```{r}
+
+# Step 0. import the data (you should already have the code for this)
+
+# Step 1. remove the columns with episode numbers or titles
+
+# Step 2. get the sum of the numeric columns (there's a way to do this with just one function!)
+
+# Step 3. sort the sums from highest to lowest
+
+# Step 4. take the top 10 elements from this sorted result
+
+# Step 5. create a bar plot from the object created in step 4 
+
+
+```
+
+# Some tips
+
+## 1.The computer loves you. It wants you to succeed
+
+-   Error messages are informative! Even if they seem inscrutable.
+
+-   When something doesn't work, stop, take a breath, and then read the output.
+
+-   Consult the help files
+
+-   Search the internet! Few problems are unique and R has a lot of users.
+
+## 2. Its not like riding a bike
+
+Its pointless to try to memorize everything. Instead, try to follow good script-writing practices
+
+-   Give objects meaningful names
+
+-   Write lots of comments
+
+-   Save your scripts (also with meaningful names)
+
+-   Use the GUI to figure stuff out, but write the equivalent commands in your script
+
+## 3. Start specific then generalize
+
+-   Don't try to tackle complex problems in one fell swoop. Take a couple of observations, figure out the correct answer, and then try to write code that gets you there. Then generalize that case to the entire data set.
+
+-   Talk to yourself: use the comments to outline what you will do *before* you do it.
+
+## 4. When all else fails
+
+Ask for help from your classmates or instructors! You'll get better help if you: share enough code or data to allow someone else to replicate your problem easily.
